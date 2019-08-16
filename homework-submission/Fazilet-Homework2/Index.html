@@ -48,7 +48,7 @@
             id: 1,
             description: "Get out of bed",
             deadline: "2017-09-11",
-            done: true
+            done: false
           },
           {
             id: 2,
@@ -74,8 +74,7 @@
             this.setState({
               [e.target.id]: e.target.value,
               [e.target.description]: e.target.value,
-              [e.target.deadline]: e.target.value,
-              [e.target.done]: e.target.value
+              [e.target.deadline]: e.target.value
             });
           };
           handleSubmit = e => {
@@ -84,8 +83,7 @@
             this.props.addTodo(this.state);
             this.setState({
               description: " ",
-              deadline: " ",
-              done: " "
+              deadline: " "
             });
           };
           render() {
@@ -106,13 +104,6 @@
                     onChange={this.handleChange}
                     value={this.state.deadline}
                   />
-                  <label htmlFor="done">Done:</label>
-                  <input
-                    type="checkbox"
-                    id="done"
-                    onChange={this.handleChange}
-                    value={this.state.done}
-                  />
                   <button>Submit</button>
                 </form>
               </div>
@@ -121,27 +112,47 @@
         }
 
         class Todo extends React.Component {
-          // The goal of this component is to show a single todo item from a given static list
+          state = {
+            done: null
+          };
+          handleChange = e => {
+            console.log(e.target.checked);
 
+            this.setState({
+              [e.target.id]: e.target.checked
+            });
+          };
           render() {
+            const doneStyle = {
+              textDecoration: " line-through"
+            };
             console.log(this.props);
             return (
               <div>
                 <ul>
                   <li
+                    style={this.state.done ? doneStyle : null}
                     className={
                       "todoD " + (this.props.done ? "crossed" : "uncrossed")
                     }
                   >
                     {this.props.description}, {this.props.deadline}
+                    <br />
+                    <button
+                      onClick={() => {
+                        this.props.deleteTodo(this.props.id);
+                      }}
+                    >
+                      Delete
+                    </button>
+                    <label htmlFor="done">Done:</label>
+                    <input
+                      type="checkbox"
+                      id="done"
+                      onChange={this.handleChange}
+                      checked={this.state.done}
+                    />
                   </li>
-                  <button
-                    onClick={() => {
-                      this.props.deleteTodo(this.props.id);
-                    }}
-                  >
-                    Delete
-                  </button>
                 </ul>
               </div>
             );
